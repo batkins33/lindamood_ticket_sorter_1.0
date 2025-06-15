@@ -1,0 +1,22 @@
+# Bytecode files
+__pycache__/
+*.py[cod]
+
+# Logs
+*.log
+
+# Environment files
+.env
+*.bak
+
+# IDE/project files
+.vscode/
+.idea/
+
+# Virtual environments
+venv/
+.env/
+
+# Mac/Windows system files
+.DS_Store
+Thumbs.db

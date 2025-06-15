@@ -1,0 +1,28 @@
+# /lindamood_ticket_sorter_3/configs.yaml
+
+input_dir: "Original Scans"
+output_dir: "processed_"
+log_dir: "logs_"
+match_preview_dir: "match_previews"
+template_dir: "template_dir"
+
+ocr:
+  language: "eng"
+  dpi: 300
+  engine: "tesseract"
+  tess_config: "--psm 6"
+
+keywords_file: "ocr_keywords.xlsx"
+
+template_matching:
+  method: "ssim"  # options: ssim, mse
+  threshold: 0.85
+
+logging:
+  format: "excel"
+  include_ocr_text: true
+  save_mismatches: true
+
+ui:
+  enable_preview: true
+  allow_manual_override: true

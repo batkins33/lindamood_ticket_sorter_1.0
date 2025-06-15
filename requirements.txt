@@ -1,0 +1,17 @@
+pillow==10.4.0
+utils==1.0.2
+processor==0.10.0
+future==1.0.0
+pandas==1.5.3
+PyYAML==6.0.2
+schema==0.7.7
+easyocr==1.6.2
+numpy==1.24.4
+opencv-contrib-python==4.6.0.66
+paddleocr==2.7.0.3
+setuptools==70.0.0
+matplotlib==3.7.4
+PyPDF2==3.0.1
+pytesseract==0.3.13
+rapidfuzz==2.13.7
+reportlab==3.6.13
