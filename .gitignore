@@ -1,7 +1,21 @@
-__pycache__/ 
+# Bytecode files
+__pycache__/
 *.pyc 
-*.log 
+
+# Logs
+*.log
 venv/ 
-.env 
-.idea/ 
+.env
+*.bak
+
+# IDE/project files
+.vscode/
+.idea/
+
+# Virtual environments
+venv/
 .vscode/ 
+/lindamood_ticket_sorter_1.0/template_dir/
+# Mac/Windows system files
+.DS_Store
+Thumbs.db
