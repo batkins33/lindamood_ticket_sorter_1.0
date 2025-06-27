@@ -15,8 +15,7 @@ preprocess:
   grayscale: false
   rotate: true
 rename_original: true
-source_path: C:/Users/brian.atkins/OneDrive - Lindamood Demolition/24-105 PHMS NPC
-  - Documents/truck tickets/2025-06-06/export/24-105_2025-06-06_class2_podium_WM.pdf
+source_path: U:/Dev/projects/sort_with_rotate/pdfs/24-105_2025-06-07_Class2_TEST_WM.pdf
 template_dir: template_dir
 template_threshold: 0.85
 two_page_scan: false

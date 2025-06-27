@@ -14,6 +14,8 @@ from numpy.typing import NDArray
 import pandas as pd
 from PIL import Image
 from rapidfuzz.fuzz import partial_ratio
+from typing import List, Dict
+
 
 from processor.file_handler import export_grouped_output
 from processor.filename_utils import parse_input_filename, format_output_filename_camel
@@ -197,7 +199,12 @@ def ocr_match_company(pil_img, ocr_config, config, threshold=80, log_row=None):
     return "Unknown", False, "", ocr_text[:300], 0
 
 
-def process_pages(pages: list[Image.Image], filepath: str, config: dict, suffix: str = "") -> list[str]:
+def process_pages(
+    pages: List[Image.Image],
+    filepath: str,
+    config: Dict,
+    suffix: str = ""
+) -> List[str]:
     logging.info(f"🧠 Starting OCR processing for {len(pages)} pages...")
     templates = load_templates(config["template_dir"]) if config.get("use_template_fallback", True) else {}
     base_name = Path(filepath).stem.upper()
