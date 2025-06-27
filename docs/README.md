@@ -1,135 +1,49 @@
-📘 README.md (Developer/Deployment Friendly)
-markdown
-Copy
-Edit
-
 # Lindamood Truck Ticket Sorter 🧾
 
-A GUI-based OCR app that classifies scanned truck ticket pages by vendor, extracts key data, and outputs sorted
-PDFs/TIFFs along with structured Excel logs.
+A GUI-based OCR utility that classifies scanned truck ticket pages by vendor, extracts ticket numbers, and outputs sorted PDFs or TIFFs with Excel logs.
 
-## 🚀 Features
+## Features
 
-- ✅ Multi-engine OCR (PaddleOCR default)
-- 📄 PDF, TIFF, JPEG input support
-- 🧠 Vendor matching via keywords or fallback template matching
-- 🗂️ Grouped exports (per-vendor)
-- 📊 Logs with ticket numbers and OCR text
-- 🖼️ Template matching fallback (OpenCV)
-- 🖥️ GUI front-end with batch support
+- Multi-engine OCR (PaddleOCR by default)
+- PDF, TIFF, and image input support
+- Vendor matching via keywords with optional template fallback
+- Grouped exports per vendor
+- Logging of ticket numbers and OCR text
 
----
+## Installation
 
-## 🛠️ Installation
-
-1. **Clone the Repo**
+1. Clone the repository and install requirements:
    ```bash
    git clone https://github.com/your-org/ticket-sorter.git
    cd ticket-sorter
+   pip install -r requirements.txt
+   ```
+2. Download Poppler and update `poppler_path` in `configs.yaml`.
+3. On first run the PaddleOCR model files will be downloaded automatically.
 
-Install Python dependencies
+## Usage
 
-bash
-Copy
-Edit
-pip install -r requirements.txt
-Download and Install Poppler
-
-For PDF image extraction
-
-Add the binary path to configs.yaml under poppler_path
-
-Download PaddleOCR Model Files
-
-Done automatically on first run (ensure internet connection)
-
-📁 Project Structure
-graphql
-Copy
-Edit
-ticket-sorter/
-│
-├── gui.py # Main GUI launcher
-├── run.py # Core execution entrypoint
-├── configs.yaml # User settings
-│
-├── processor/
-│ ├── hybrid_ocr.py # Page-wise OCR and vendor detection
-│ ├── image_ops.py # Image preprocessing, extraction
-│ ├── file_handler.py # Output PDF/TIFF logic
-│ ├── filename_utils.py # Parsing and naming utilities
-│
-├── utils/
-│ ├── ocr_wrapper.py # OCR abstraction
-│ ├── ocr_paddle.py # PaddleOCR engine logic
-│ ├── loader.py # Loads templates + keyword configs
-│
-├── template_dir/ # Directory of per-vendor templates
-├── ocr_keywords.xlsx # Match terms (vendor name, type, keywords)
-📸 Usage
 Launch the GUI:
-
-bash
-Copy
-Edit
+```bash
 python gui.py
-Select file(s) or a folder.
+```
 
-Choose settings like:
+Select files or a folder and press **Run Sorter**. Results are written to the output directory configured in `configs.yaml`.
 
-PDF or TIFF
+## Configuration
 
-Rotation, grayscale, two-page scan
+`configs.yaml` controls output format, preprocessing options, and template matching settings. Vendor keywords live in `ocr_keywords.xlsx`.
 
-Whether to fallback on template matching
+## Developer Notes
 
-Press Run Sorter!
+OCR logic resides in `processor/hybrid_ocr.py` while image extraction and template matching live in `processor/image_ops.py`.
 
-🔍 OCR Keyword File Format (ocr_keywords.xlsx)
-vendor name vendor type ocr match terms
-Acme Inc trucking acme, acme corp
-GravelCo materials gravelco, gvl, gravel
+## Requirements
 
-⚙️ Config File (configs.yaml)
-yaml
-Copy
-Edit
-output_format: pdf
-file_format: camel
-rename_original: true
-two_page_scan: false
-template_dir: template_dir
-keyword_file: ocr_keywords.xlsx
-poppler_path: C:/Poppler/bin
-preprocess:
-grayscale: false
-rotate: true
-use_template_fallback: true
-template_threshold: 0.85
-👨‍💻 Developer Notes
-OCR logic lives in hybrid_ocr.py
+- Python 3.9+
+- paddleocr
+- pytesseract
+- pdf2image
+- opencv-python
+- and other packages listed in `requirements.txt`
 
-Fallback template logic uses OpenCV (matchTemplate)
-
-Output filenames are built from parsed metadata in file names
-
-Logs are stored in /logs/ and /processed/
-
-📦 Requirements
-Python 3.9+
-
-paddleocr, pytesseract, pdf2image, openpyxl, opencv-python
-
-Poppler (for PDF image extraction)
-
-🧪 Testing
-You can test OCR output and vendor matching by running:
-
-bash
-Copy
-Edit
-python run.py
-And passing a config dictionary to run_input(filepath, config).
-
-📧 Support
-Issues? Drop a message in the GitHub Issues tab or email dev@yourdomain.com.
