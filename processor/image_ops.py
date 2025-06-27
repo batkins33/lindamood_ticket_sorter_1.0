@@ -51,9 +51,9 @@ def correct_image_orientation(pil_img):
             elif rotation == 270:
                 return pil_img.rotate(-270, expand=True)
     except pytesseract.TesseractError as e:
-        print(f"Tesseract error during orientation detection: {e}")
+        logging.error(f"Tesseract error during orientation detection: {e}")
     except Exception as e:
-        print(f"Unexpected error in orientation correction: {e}")
+        logging.error(f"Unexpected error in orientation correction: {e}")
 
     return pil_img
 
@@ -112,13 +112,15 @@ def run_template_matching(page_image, template_dict, threshold=0.85, preview=Tru
                     temp_gray.shape[0] > page_gray.shape[0]
                     or temp_gray.shape[1] > page_gray.shape[1]
             ):
-                print(f"⚠️ Skipped oversized template for vendor '{vendor}'")
+                logging.warning(
+                    f"Skipped oversized template for vendor '{vendor}'"
+                )
                 continue
 
             result = cv2.matchTemplate(page_gray, temp_gray, cv2.TM_CCOEFF_NORMED)
             min_val, score, min_loc, max_loc = cv2.minMaxLoc(result)
 
-            print(f"🔍 Vendor: {vendor} | Score: {score:.3f}")
+            logging.debug(f"Vendor: {vendor} | Score: {score:.3f}")
 
             if score > best_score:
                 best_score = score
@@ -146,7 +148,7 @@ def run_template_matching(page_image, template_dict, threshold=0.85, preview=Tru
             )
             if preview:
                 cv2.imwrite(save_path, vis_img)
-                print(f"💾 Match preview saved: {save_path}")
+                logging.info(f"Match preview saved: {save_path}")
 
                 plt.figure(figsize=(10, 6))
                 plt.title(f"Matched: {best_vendor} ({best_score:.3f})")
@@ -155,7 +157,9 @@ def run_template_matching(page_image, template_dict, threshold=0.85, preview=Tru
                 plt.show()
 
         except Exception as e:
-            print(f"⚠️ Could not display/save match visualization: {e}")
+            logging.warning(
+                f"Could not display/save match visualization: {e}"
+            )
         return best_vendor, round(best_score, 3)
     else:
         return "Unknown", round(best_score, 3)
