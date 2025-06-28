@@ -23,6 +23,7 @@ from processor.image_ops import correct_image_orientation, apply_grayscale, extr
     run_template_matching
 from utils.loader import load_ocr_configs_from_excel, load_templates
 from utils.ocr_wrapper import read_text
+from utils.timing import track_time
 
 OCR_THRESHOLD = 80
 MAX_TEMPLATE_WIDTH = 1200
@@ -234,8 +235,9 @@ def process_pages(
         for i, page in enumerate(pages)
     ]
 
-    with ThreadPoolExecutor(max_workers=config.get("num_workers", 4)) as executor:
-        results = list(executor.map(process_single_page, tasks))
+    with track_time("ocr_processing"):
+        with ThreadPoolExecutor(max_workers=config.get("num_workers", 4)) as executor:
+            results = list(executor.map(process_single_page, tasks))
 
     for (res, roi_hash) in results:
         i, page, comp, matched = res["page"], res["page_image"], res["vendor"], res["matched"]
@@ -270,7 +272,8 @@ def process_pages(
     except Exception as e:
         logging.warning(f"⚠️ Failed to save OCR text log: {e}")
 
-    output_paths = export_grouped_output(pages_by_vendor, config["output_format"], file_metadata, filepath, config)
+    with track_time("export_output"):
+        output_paths = export_grouped_output(pages_by_vendor, config["output_format"], file_metadata, filepath, config)
 
     if config["output_format"].lower() == "pdf":
         combined_name = format_output_filename_camel(
@@ -297,13 +300,14 @@ def process_pages(
 
         if compressed_pages:
             try:
-                compressed_pages[0].save(
-                    combined_path,
-                    save_all=True,
-                    append_images=compressed_pages[1:],
-                    format="PDF",
-                    resolution=pdf_resolution
-                )
+                with track_time("save_combined_pdf"):
+                    compressed_pages[0].save(
+                        combined_path,
+                        save_all=True,
+                        append_images=compressed_pages[1:],
+                        format="PDF",
+                        resolution=pdf_resolution
+                    )
                 logging.info(f"📎 Compressed combined PDF saved: {combined_path}")
             except Exception as e:
                 logging.error(f"❌ Failed to save combined compressed PDF: {e}")

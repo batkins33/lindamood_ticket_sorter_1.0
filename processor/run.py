@@ -14,6 +14,7 @@ from processor.file_handler import archive_original, get_dynamic_paths
 from processor.hybrid_ocr import process_pages
 from processor.image_ops import extract_images_from_file
 from utils.ocr_wrapper import read_text
+from utils.timing import track_time, report_timings, reset_timings
 
 # ✅ Disable MKLDNN to prevent inference crashes in some environments
 os.environ["FLAGS_use_mkldnn"] = "0"
@@ -112,35 +113,43 @@ def _run_single(filepath, config):
     base_name = path.stem
     combined_name = base_name + ".pdf"
     out_dir, log_dir, combined_dir = get_dynamic_paths(filepath, combined_name)
+    reset_timings()
 
-    pages = extract_images_from_file(filepath, config["poppler_path"])
+    with track_time("extract_images"):
+        pages = extract_images_from_file(filepath, config["poppler_path"])
     logging.info(f"Extracted {len(pages)} pages from {filepath}")
 
     ocr_logs = []
 
-    for i, page in enumerate(pages):
-        try:
-            engine = config.get("ocr_engine", "tesseract")
-            text_result = read_text(image=page)
-            text = text_result.get("text", "")
-            conf = text_result.get("confidence")
-            ocr_logs.append((path.name, i + 1, engine, text.strip()))
-        except Exception as e:
-            logging.warning(f"⚠️ OCR failed on page {i + 1}: {e}")
-            ocr_logs.append((path.name, i + 1, engine, "[OCR Failed]"))
+    with track_time("initial_ocr"):
+        for i, page in enumerate(pages):
+            try:
+                engine = config.get("ocr_engine", "tesseract")
+                text_result = read_text(image=page)
+                text = text_result.get("text", "")
+                conf = text_result.get("confidence")
+                ocr_logs.append((path.name, i + 1, engine, text.strip()))
+            except Exception as e:
+                logging.warning(f"⚠️ OCR failed on page {i + 1}: {e}")
+                ocr_logs.append((path.name, i + 1, engine, "[OCR Failed]"))
 
     if config.get("two_page_scan", False):
         fronts = pages[::2]
         backs = pages[1::2]
-        process_pages(fronts, filepath, config, "")
-        process_pages(backs, filepath, config, "_back")
+        with track_time("process_pages_front"):
+            process_pages(fronts, filepath, config, "")
+        with track_time("process_pages_back"):
+            process_pages(backs, filepath, config, "_back")
     else:
-        process_pages(pages, filepath, config)
+        with track_time("process_pages"):
+            process_pages(pages, filepath, config)
 
     if config.get("rename_original", False):
-        archive_original(filepath)
+        with track_time("archive_original"):
+            archive_original(filepath)
 
     logging.info(f"✅ Output written to: {out_dir}")
+    report_timings()
     return ocr_logs
 
 
