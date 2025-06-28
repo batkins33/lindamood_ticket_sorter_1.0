@@ -1,4 +1,4 @@
-# /lindamood_ticket_sorter_3/configs.yaml
+# /lindamood_ticket_sorter_1.0/configs.yaml
 
 input_dir: "Original Scans"
 output_dir: "processed_"

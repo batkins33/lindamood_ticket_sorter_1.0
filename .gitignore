@@ -4,7 +4,6 @@ __pycache__/
 
 # Logs
 *.log
-venv/ 
 .env
 *.bak
 
@@ -14,8 +13,7 @@ venv/
 
 # Virtual environments
 venv/
-.vscode/ 
-/lindamood_ticket_sorter_1.0/template_dir/
+template_dir/
 # Mac/Windows system files
 .DS_Store
 Thumbs.db
