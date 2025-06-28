@@ -10,14 +10,13 @@ output_dir: ./outputs
 output_format: pdf
 pdf_resize_scale: 1.0
 pdf_resolution: 300
-# Path to the Poppler binaries used for PDF image extraction
-poppler_path: ${POPPLER_PATH:-/path/to/poppler/bin}
+poppler_path: C:/Poppler/poppler-24.08.0/Library/bin
 preprocess:
   grayscale: false
   rotate: true
 rename_original: true
-# Example source file or folder
-source_path: /path/to/input.pdf
+source_path: C:/Users/brian.atkins/OneDrive - Lindamood Demolition/24-105 PHMS NPC
+  - Documents/truck tickets/2025-06-23/export/24-105_2025-06-23_Class2_NTX_WM_22.pdf
 template_dir: template_dir
 template_threshold: 0.85
 two_page_scan: false
