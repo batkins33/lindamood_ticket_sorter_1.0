@@ -161,9 +161,9 @@ def ocr_match_company(pil_img, ocr_config, config, threshold=80, log_row=None):
         ocr_text = raw_result.get("text", "")
         ocr_text = re.sub(r"[^a-z0-9]+", "", ocr_text.lower())
         if config.get("debug"):
-            print("🧠 OCR PREVIEW:", ocr_text[:200])
+            logging.debug(f"OCR preview: {ocr_text[:200]}")
     except Exception as e:
-        print("❌ OCR Exception:", e)
+        logging.error(f"OCR Exception: {e}")
         return "Unknown", False, "", "[OCR failed]", 0
 
     def best_match(companies):

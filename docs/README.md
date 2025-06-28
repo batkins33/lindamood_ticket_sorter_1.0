@@ -18,7 +18,7 @@ A GUI-based OCR utility that classifies scanned truck ticket pages by vendor, ex
    cd ticket-sorter
    pip install -r requirements.txt
    ```
-2. Download Poppler and update `poppler_path` in `configs.yaml`.
+2. Download Poppler and set the `POPPLER_PATH` environment variable or update `poppler_path` in `configs.yaml`.
 3. On first run the PaddleOCR model files will be downloaded automatically.
 
 ## Usage
