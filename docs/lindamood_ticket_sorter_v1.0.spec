@@ -12,7 +12,7 @@ a = Analysis(
     binaries=[],
     datas=[
         ('ocr_keywords.xlsx', '.'), 
-        ('config.yaml', '.'), 
+        ('configs.yaml', '.'),
         ('template_dir/*', 'template_dir')
     ],
     hiddenimports=[],
