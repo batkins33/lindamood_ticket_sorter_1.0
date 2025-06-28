@@ -1,15 +1,24 @@
 import json
 import os
 import logging
+from pathlib import Path
 
 import pandas as pd
 import yaml
 from schema import Schema, And, Use, SchemaError
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 _ocr_configs_cache = {}
 
 
-def load_configs(path="configs.yaml"):
+def _resolve_path(path: str) -> Path:
+    p = Path(path)
+    return p if p.is_absolute() else PROJECT_ROOT / p
+
+
+def load_configs(path: str = "configs.yaml"):
+    path = _resolve_path(path)
     with open(path, "r") as file:
         raw = os.path.expandvars(file.read())
         configs = yaml.safe_load(raw)
@@ -34,7 +43,8 @@ def load_configs(path="configs.yaml"):
     return configs
 
 
-def load_ocr_configs_from_excel(path):
+def load_ocr_configs_from_excel(path: str):
+    path = _resolve_path(path)
     mtime = os.path.getmtime(path)
     cached = _ocr_configs_cache.get(path)
     if cached and cached.get("mtime") == mtime:
@@ -72,17 +82,18 @@ def load_ocr_configs_from_excel(path):
             logging.warning(f"Failed to parse row {i + 2}: {e}")
             continue
 
-    _ocr_configs_cache[path] = {"configs": configs, "mtime": mtime}
+    _ocr_configs_cache[str(path)] = {"configs": configs, "mtime": mtime}
     return configs
 
 
-def load_ocr_keywords(filepath):
-    if filepath.lower().endswith(".json"):
-        with open(filepath, "r") as f:
+def load_ocr_keywords(filepath: str):
+    path = _resolve_path(filepath)
+    if path.suffix.lower() == ".json":
+        with open(path, "r") as f:
             return json.load(f)
     else:
         keyword_dict = {}
-        df = pd.read_excel("ocr_keywords.xlsx", engine="openpyxl")
+        df = pd.read_excel(path, engine="openpyxl")
         for _, row in df.iterrows():
             company = str(row.get("company name", "")).strip()
             raw_terms = str(row.get("ocr match terms", "")).strip()
@@ -92,11 +103,12 @@ def load_ocr_keywords(filepath):
         return keyword_dict
 
 
-def load_templates(template_dir):
+def load_templates(template_dir: str):
     from collections import defaultdict
     import os
     import cv2
     from pathlib import Path
+    template_dir = _resolve_path(template_dir)
 
     templates = defaultdict(list)
 
