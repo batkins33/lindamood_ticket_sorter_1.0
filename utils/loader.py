@@ -1,5 +1,6 @@
 import json
 import os
+import logging
 
 import pandas as pd
 import yaml
@@ -10,7 +11,8 @@ _ocr_configs_cache = {}
 
 def load_configs(path="configs.yaml"):
     with open(path, "r") as file:
-        configs = yaml.safe_load(file)
+        raw = os.path.expandvars(file.read())
+        configs = yaml.safe_load(raw)
 
     schema = Schema(
         {
@@ -42,12 +44,12 @@ def load_ocr_configs_from_excel(path):
     try:
         df = pd.read_excel(path, engine="openpyxl")
     except Exception as e:
-        print(f"❌ Failed to load OCR keyword Excel: {e}")
+        logging.error(f"Failed to load OCR keyword Excel: {e}")
         return {}
 
     required_cols = {"vendor name", "vendor type", "ocr match terms"}
     if not required_cols.issubset(set(df.columns.str.lower())):
-        print("❌ Missing one or more required columns:", required_cols)
+        logging.error(f"Missing one or more required columns: {required_cols}")
         return {}
 
     for i, row in df.iterrows():
@@ -60,14 +62,14 @@ def load_ocr_configs_from_excel(path):
                 if kw.strip()
             ]
             if not (name and vtype and keywords):
-                print(f"⚠️ Skipping row {i + 2} due to empty fields: {row}")
+                logging.warning(f"Skipping row {i + 2} due to empty fields: {row}")
                 continue
             configs[name] = {
                 "vendor_type": vtype,
                 "keywords": keywords,
             }
         except Exception as e:
-            print(f"⚠️ Failed to parse row {i + 2}: {e}")
+            logging.warning(f"Failed to parse row {i + 2}: {e}")
             continue
 
     _ocr_configs_cache[path] = {"configs": configs, "mtime": mtime}
@@ -105,10 +107,10 @@ def load_templates(template_dir):
                 full_path = os.path.join(root, file)
                 img = cv2.imread(full_path, cv2.IMREAD_GRAYSCALE)
                 if img is None:
-                    print(f"⚠️ Failed to load template: {full_path}")
+                    logging.warning(f"Failed to load template: {full_path}")
                 else:
-                    print(f"✅ Loaded template for vendor '{vendor}': {file}")
+                    logging.info(f"Loaded template for vendor '{vendor}': {file}")
                     templates[vendor].append(img)
 
-    print(f"📦 Total vendors loaded: {len(templates)}")
+    logging.info(f"Total vendors loaded: {len(templates)}")
     return templates

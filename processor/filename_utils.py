@@ -43,8 +43,7 @@ def parse_input_filename_fuzzy(filename):
     base = re.sub(r" - Copy.*$", "", base, flags=re.IGNORECASE)
     parts = base.split("_")
 
-    print("Parsed parts:", parts)  # ✅ Add this
-    logging.debug(f"Parsed filename parts: {parts}")  # ✅ logs instead of print
+    logging.debug(f"Parsed filename parts: {parts}")
 
     job_id = parts[0] if len(parts) > 0 else "UNKNOWN"
     raw_date = parts[1] if len(parts) > 1 else "UNKNOWN"

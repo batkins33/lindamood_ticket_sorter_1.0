@@ -168,7 +168,7 @@ def launch_gui():
 if __name__ == "__main__":
     try:
         launch_gui()
-    except Exception as e:
+    except Exception:
         import traceback
-        print("❌ Unhandled exception occurred in GUI:")
+        logging.error("Unhandled exception occurred in GUI:")
         traceback.print_exc()

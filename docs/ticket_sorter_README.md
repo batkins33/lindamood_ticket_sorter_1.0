@@ -11,20 +11,9 @@ extracts ticket numbers, and logs the output into Excel.
 2. Ensure your interpreter is set correctly.
 3. Run `gui.py` directly using the green ▶️ button.
 
-### ⚠️ Note
+### ▶️ Running from Command Line
 
-If you're running scripts like `ocr_utils.py` or `run.py` **directly**, you **must** use module execution to avoid
-import errors:
-
-```bash
-python -m processor.run
-```
-
----
-
-### ▶️ Running from Command Line (main.py)
-
-This starts the processor with config:
+Execute the sorter via `main.py`:
 
 ```bash
 python -m main --file "path/to/your/input.pdf"
