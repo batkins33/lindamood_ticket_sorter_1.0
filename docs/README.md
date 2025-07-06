@@ -18,8 +18,22 @@ A GUI-based OCR tool that classifies scanned truck ticket pages by vendor, extra
    cd ticket-sorter
    pip install -r requirements.txt
    ```
-2. Download Poppler and set the `POPPLER_PATH` environment variable or update `poppler_path` in `configs.yaml`.
-3. On first run the PaddleOCR model files will be downloaded automatically.
+   You can optionally install the project in editable mode so the
+   `lindamood-sorter` command is available:
+   ```bash
+   pip install -e .
+   ```
+2. Download Poppler and set the `POPPLER_PATH` environment variable or update
+   `poppler_path` in `configs.yaml`. Windows users can grab a prebuilt archive
+   from [poppler-windows](https://github.com/oschwartz10612/poppler-windows/releases)
+   and point the configuration to the extracted `bin` folder. On macOS simply
+   run `brew install poppler`.
+3. Install Tesseract if you plan to use the tesseract OCR engine. Ensure the
+   `tesseract` executable is available in your `PATH` or set
+   `pytesseract.pytesseract.tesseract_cmd` accordingly. Windows builds can be
+   found on the [UB Mannheim site](https://github.com/UB-Mannheim/tesseract/wiki)
+   while macOS users may install with `brew install tesseract`.
+4. On first run the PaddleOCR model files will be downloaded automatically.
 
 ## Usage
 
@@ -96,4 +110,6 @@ OCR logic resides in `processor/hybrid_ocr.py` while image extraction and templa
 - pytesseract
 - pdf2image
 - opencv-python
+- Poppler (for PDF conversion)
+- Tesseract OCR if using the tesseract engine
 - and other packages listed in `requirements.txt`
