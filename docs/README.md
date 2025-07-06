@@ -1,6 +1,6 @@
 # Lindamood Truck Ticket Sorter 🧾
 
-A GUI-based OCR utility that classifies scanned truck ticket pages by vendor, extracts ticket numbers, and outputs sorted PDFs or TIFFs with Excel logs.
+A GUI-based OCR tool that classifies scanned truck ticket pages by vendor, extracts ticket numbers, and outputs sorted PDFs or TIFFs with Excel logs.
 
 ## Features
 
@@ -23,16 +23,67 @@ A GUI-based OCR utility that classifies scanned truck ticket pages by vendor, ex
 
 ## Usage
 
-Launch the GUI:
+### Running the GUI
+
 ```bash
 python gui.py
 ```
 
 Select files or a folder and press **Run Sorter**. Results are written to the output directory configured in `configs.yaml`.
 
-## Configuration
+### Running from the Command Line
 
-`configs.yaml` controls output format, preprocessing options, and template matching settings. Vendor keywords live in `ocr_keywords.xlsx`.
+```bash
+python -m main --file "path/to/your/input.pdf"
+```
+
+### Running from PyCharm
+
+1. Open `gui.py` in PyCharm.
+2. Ensure your interpreter is set correctly.
+3. Run the file using the green ▶️ button.
+
+## Processing Workflow
+
+1. **Extraction** – pages are extracted from PDFs or image files using `pdf2image`.
+2. **OCR** – each page is optionally rotated or converted to grayscale before text is read by the configured OCR engine.
+3. **Vendor Matching** – the OCR text is compared to keywords from `ocr_keywords.xlsx`. If no match is found, template images in `template_dir` can be used as a fallback.
+4. **Export** – pages are grouped by vendor and exported as either PDF or TIFF. A combined PDF can also be created.
+5. **Logging** – Excel logs record page numbers, vendor names and ticket numbers. Additional OCR text logs and overlay PDFs are saved in the log directory.
+
+## Configuration Reference (`configs.yaml`)
+
+| Option | Description |
+|--------|-------------|
+| `cache_file` | Optional path used to store OCR cache data. |
+| `exclude_keywords` | List of terms ignored during vendor keyword matching. |
+| `keyword_file` | Excel file containing vendor keywords and types. |
+| `log_dir` | Directory where Excel logs are written. |
+| `ocr_back_pages` | When `true`, OCR is also run on back pages in two-page scans. |
+| `ocr_crop_top_percent` | Percent of page height to OCR when ROI cropping is enabled. |
+| `ocr_engine` | OCR engine to use (`paddleocr` or `tesseract`). |
+| `output_dir` | Destination directory for processed files. |
+| `output_format` | Either `pdf` or `tif` for vendor exports. |
+| `pdf_resize_scale` | Scale factor applied when creating combined PDFs. |
+| `pdf_resolution` | DPI used for combined PDF pages. |
+| `poppler_path` | Path to Poppler binaries required for PDF conversion. |
+| `preprocess.grayscale` | Convert pages to grayscale before OCR. |
+| `preprocess.rotate` | Attempt to auto-rotate pages before OCR. |
+| `rename_original` | Move the original file to an archive folder after processing. |
+| `source_path` | Default file or folder processed when launching the GUI. |
+| `template_dir` | Directory containing vendor template images. |
+| `template_threshold` | Confidence threshold for template matching. |
+| `two_page_scan` | Treat alternating pages as front/back pairs. |
+| `use_roi` | Limit OCR to the top portion of each page. |
+| `use_template_fallback` | Try template matching when keyword OCR fails. |
+
+## Folder Structure
+
+- `main.py` – CLI entry point
+- `gui.py` – GUI interface
+- `processor/` – Processing logic and OCR
+- `utils/` – Loader, configuration helpers and keywords
+- `template_dir/` – Image templates for fallback matching
 
 ## Developer Notes
 
@@ -46,4 +97,3 @@ OCR logic resides in `processor/hybrid_ocr.py` while image extraction and templa
 - pdf2image
 - opencv-python
 - and other packages listed in `requirements.txt`
-

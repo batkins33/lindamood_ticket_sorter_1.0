@@ -1,8 +1,8 @@
 # Lindamood Ticket Sorter
 
-The Lindamood Ticket Sorter is a small OCR tool used to classify and rename scanned truck tickets. It can read PDF or image files, group pages by vendor, and produce new PDF/TIFF files along with Excel logs.
+A desktop utility that uses OCR to classify and rename scanned truck tickets. It reads PDF or image files, groups pages by vendor and exports new PDF/TIFF files along with Excel logs.
 
-See [`docs/README.md`](docs/README.md) for full documentation.
+See the [full guide](docs/README.md) for detailed instructions and configuration.
 
 ## Quick start
 
