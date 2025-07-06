@@ -30,3 +30,13 @@ See the [full guide](docs/README.md) for detailed instructions and configuration
 ## Running tests
 
 Tests are stored under `tests/`. After installing requirements, run `pytest` to ensure everything works.
+
+## Examples
+
+Example scripts are located in the `examples/` directory. The
+`paddle_demo.py` file demonstrates using PaddleOCR separately from the
+main application:
+
+```bash
+python examples/paddle_demo.py
+```
