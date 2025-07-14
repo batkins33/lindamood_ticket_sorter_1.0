@@ -113,3 +113,21 @@ OCR logic resides in `processor/hybrid_ocr.py` while image extraction and templa
 - Poppler (for PDF conversion)
 - Tesseract OCR if using the tesseract engine
 - and other packages listed in `requirements.txt`
+
+### Module Overview
+
+Below is a summary of the most important modules:
+
+- **main.py** – CLI entry point that invokes the processing pipeline.
+- **gui.py** – Tkinter GUI front end for selecting files and options.
+- **processor/run.py** – orchestrates batch processing, OCR and logging.
+- **processor/hybrid_ocr.py** – matches vendors via PaddleOCR and
+  optional template matching.
+- **processor/image_ops.py** – image extraction, orientation correction
+  and template matching helpers.
+- **processor/file_handler.py** – groups pages by vendor, writes Excel
+  logs and exports output files.
+- **processor/filename_utils.py** – parses input file names and builds
+  standardized output names.
+- **utils/** – configuration loading, OCR wrappers and timing utilities.
+
