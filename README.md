@@ -40,3 +40,18 @@ main application:
 ```bash
 python examples/paddle_demo.py
 ```
+
+## Module Overview
+
+The project is split into several small modules:
+
+- `main.py` – command line entry point that loads configuration and
+  calls the processing pipeline.
+- `gui.py` – Tkinter based GUI used for day‑to‑day operation.
+- `processor/` – core processing logic with helpers:
+  - `run.py` orchestrates batch processing and logging.
+  - `hybrid_ocr.py` performs OCR, vendor matching and export.
+  - `image_ops.py` handles image extraction and template matching.
+  - `file_handler.py` writes Excel logs and grouped output files.
+  - `filename_utils.py` parses input file names and builds output names.
+- `utils/` – configuration loading, OCR wrappers and timing utilities.
